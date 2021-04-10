@@ -20,7 +20,7 @@ class VorbisRecipe(NDKRecipe):
     def build_arch(self, arch):
         with current_directory(self.get_build_dir(arch.arch)):
             env = self.get_recipe_env(arch)
-            flags = ['--host=' + arch.toolchain_prefix]
+            flags = ['--host=' + arch.command_prefix]
             if self.ctx.ndk_standalone:
                 flags.append('--with-sysroot=' + self.ctx.ndk_sysroot)  # FIXME
             else:
