@@ -9,11 +9,12 @@ class PyjniusRecipe(CythonRecipe):
     version = '1.3.0'
     url = 'https://github.com/kivy/pyjnius/archive/{version}.zip'
     name = 'pyjnius'
-    depends = [('genericndkbuild', 'sdl2'), 'six']
+    depends = [('genericndkbuild', 'sdl2', 'qt5'), 'six']
     site_packages_name = 'jnius'
 
     patches = [('sdl2_jnienv_getter.patch', will_build('sdl2')),
-               ('genericndkbuild_jnienv_getter.patch', will_build('genericndkbuild'))]
+               ('genericndkbuild_jnienv_getter.patch', will_build('genericndkbuild')),
+               ('qt5_jnienv_getter.patch', will_build('qt5'))]
 
     def postbuild_arch(self, arch):
         super().postbuild_arch(arch)
