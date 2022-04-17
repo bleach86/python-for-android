@@ -62,7 +62,8 @@ def build(target_python, requirements):
         for line in sh.python(
                 'setup.py', 'apk', '--sdk-dir', android_sdk_home,
                 '--ndk-dir', android_ndk_home, '--requirements',
-                requirements, _err_to_out=True, _iter=True):
+                requirements, '--arch', 'arm64-v8a', '--arch', 'armeabi-v7a',
+                _err_to_out=True, _iter=True):
             print(line)
 
 

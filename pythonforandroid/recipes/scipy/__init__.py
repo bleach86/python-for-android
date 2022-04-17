@@ -29,8 +29,6 @@ class ScipyRecipe(CompiledComponentsPythonRecipe):
         LIB = 'lib64' if '64' in arch.arch else 'lib'
 
         lapack_dir = join(Recipe.get_recipe('lapack', self.ctx).get_build_dir(arch.arch), 'build', 'install')
-        sysroot = f"{self.ctx.ndk_dir}/platforms/{env['NDK_API']}/{arch.platform_dir}"
-        sysroot_include = f'{self.ctx.ndk_dir}/toolchains/llvm/prebuilt/{HOST}/sysroot/usr/include'
         prefix = ""  # FIXME
         libgfortran = f'{self.ctx.ndk_dir}/toolchains/{prefix}-{GCC_VER}/prebuilt/{HOST}/{prefix}/{LIB}'
         numpylib = self.ctx.get_python_install_dir(arch.arch) + '/numpy/core/lib'
@@ -39,10 +37,10 @@ class ScipyRecipe(CompiledComponentsPythonRecipe):
         env['LAPACK'] = f'{lapack_dir}/lib'
         env['BLAS'] = env['LAPACK']
         env['F90'] = f'{prefix}-gfortran'
-        env['CXX'] += f' -Wl,-l{self.stl_lib_name} -Wl,-L{self.get_stl_lib_dir(arch)}'
-        env['CPPFLAGS'] += f' --sysroot={sysroot} -I{sysroot_include}/c++/v1 -I{sysroot_include}'
+        env['CXX'] += f' -Wl,-l{self.stl_lib_name} -Wl,-L{arch.ndk_lib_dir}'
+        env['CPPFLAGS'] += f' --sysroot={self.ctx.ndk.sysroot} -I{self.ctx.ndk.libcxx_include_dir} -I{self.ctx.ndk.sysroot_include_dir}'
         env['LDSHARED'] = 'clang'
-        env['LDFLAGS'] += f' {LDSHARED_opts} --sysroot={sysroot} -L{libgfortran} -L{numpylib}'
+        env['LDFLAGS'] += f' {LDSHARED_opts} --sysroot={self.ctx.ndk.sysroot} -L{libgfortran} -L{numpylib}'
         env['LDFLAGS'] += f' -L{self.ctx.ndk_dir}/sources/cxx-stl/llvm-libc++/libs/{arch.arch}/'
 
         return env
