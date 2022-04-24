@@ -130,10 +130,11 @@ jobs:
           make testapps-with-numpy
       - name: Rename artifact to include the build platform name
         run: |
-          mv ${{ env.APK_ARTIFACT_FILENAME }} ${{ matrix.runs_on }}-${{ env.APK_ARTIFACT_FILENAME }}
+          mv testapps/on_device_unit_tests/${{ env.APK_ARTIFACT_FILENAME }} ${{ matrix.runs_on }}-${{ env.APK_ARTIFACT_FILENAME }}
       - uses: actions/upload-artifact@v1
         with:
           name: ${{ matrix.runs_on }}-${{ env.APK_ARTIFACT_FILENAME }}
+          path: ${{ matrix.runs_on }}-${{ env.APK_ARTIFACT_FILENAME }}
 
   ubuntu_build_aab:
     name: Unit test aab [ ${{ matrix.runs_on }} ]
@@ -214,10 +215,11 @@ jobs:
           make testapps-with-numpy-aab
       - name: Rename artifact to include the build platform name
         run: |
-          mv ${{ env.AAB_ARTIFACT_FILENAME }} ${{ matrix.runs_on }}-${{ env.AAB_ARTIFACT_FILENAME }}
+          mv testapps/on_device_unit_tests/${{ env.AAB_ARTIFACT_FILENAME }} ${{ matrix.runs_on }}-${{ env.AAB_ARTIFACT_FILENAME }}
       - uses: actions/upload-artifact@v1
         with:
           name: ${{ matrix.runs_on }}-${{ env.AAB_ARTIFACT_FILENAME }}
+          path: ${{ matrix.runs_on }}-${{ env.AAB_ARTIFACT_FILENAME }}
 
   ubuntu_rebuild_updated_recipes:
     name: Test updated recipes [ ubuntu-latest ]
