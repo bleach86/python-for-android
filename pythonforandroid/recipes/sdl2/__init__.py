@@ -22,7 +22,7 @@ class LibSDL2Recipe(BootstrapNDKRecipe):
 
     def should_build(self, arch):
         libdir = join(self.get_build_dir(arch.arch), "../..", "libs", arch.arch)
-        libs = ['libhidapi.so', 'libmain.so', 'libSDL2.so', 'libSDL2_image.so', 'libSDL2_mixer.so', 'libSDL2_ttf.so']
+        libs = ['libmain.so', 'libSDL2.so', 'libSDL2_image.so', 'libSDL2_mixer.so', 'libSDL2_ttf.so']
         return not all(exists(join(libdir, x)) for x in libs)
 
     def build_arch(self, arch):
