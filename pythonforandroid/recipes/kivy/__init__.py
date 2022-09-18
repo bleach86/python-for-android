@@ -48,7 +48,7 @@ class KivyRecipe(CythonRecipe):
             env['KIVY_SDL2_PATH'] = ':'.join([
                 join(self.ctx.bootstrap.build_dir, 'jni', 'SDL', 'include'),
                 join(self.ctx.bootstrap.build_dir, 'jni', 'SDL2_image'),
-                join(self.ctx.bootstrap.build_dir, 'jni', 'SDL2_mixer','include'),
+                join(self.ctx.bootstrap.build_dir, 'jni', 'SDL2_mixer', 'include'),
                 join(self.ctx.bootstrap.build_dir, 'jni', 'SDL2_ttf'),
             ])
 

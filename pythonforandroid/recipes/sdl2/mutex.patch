@@ -7,12 +7,12 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
  {
 -    SDL_LockMutex(Android_ActivityMutex);
 +    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "nativeSetScreenResolution()");
-+    SDL_LockMutex(Android_ActivityMutex);
++    //SDL_LockMutex(Android_ActivityMutex);
  
      Android_SetScreenResolution(surfaceWidth, surfaceHeight, deviceWidth, deviceHeight, rate);
  
 -    SDL_UnlockMutex(Android_ActivityMutex);
-+    SDL_UnlockMutex(Android_ActivityMutex);
++    //SDL_UnlockMutex(Android_ActivityMutex);
  }
  
  /* Resize */
@@ -21,7 +21,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
  {
 -    SDL_LockMutex(Android_ActivityMutex);
 +    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeResize()");
-+    SDL_LockMutex(Android_ActivityMutex);
++    //SDL_LockMutex(Android_ActivityMutex);
  
      if (Android_Window)
      {
@@ -29,7 +29,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
      }
  
 -    SDL_UnlockMutex(Android_ActivityMutex);
-+    SDL_UnlockMutex(Android_ActivityMutex);
++    //SDL_UnlockMutex(Android_ActivityMutex);
  }
  
  JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onNativeOrientationChanged)(
@@ -38,7 +38,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
  {
 -    SDL_LockMutex(Android_ActivityMutex);
 +    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeOrientationChanged()");
-+    SDL_LockMutex(Android_ActivityMutex);
++    //SDL_LockMutex(Android_ActivityMutex);
  
      displayOrientation = (SDL_DisplayOrientation)orientation;
  
@@ -47,7 +47,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
      }
  
 -    SDL_UnlockMutex(Android_ActivityMutex);
-+    SDL_UnlockMutex(Android_ActivityMutex);
++    //SDL_UnlockMutex(Android_ActivityMutex);
  }
  
  JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(nativeAddTouch)(
@@ -57,7 +57,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
  {
 -    SDL_LockMutex(Android_ActivityMutex);
 +    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeSurfaceCreated()");
-+    SDL_LockMutex(Android_ActivityMutex);
++    //SDL_LockMutex(Android_ActivityMutex);
  
      if (Android_Window)
      {
@@ -66,7 +66,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
      }
  
 -    SDL_UnlockMutex(Android_ActivityMutex);
-+    SDL_UnlockMutex(Android_ActivityMutex);
++    //SDL_UnlockMutex(Android_ActivityMutex);
  }
  
  /* Called from surfaceChanged() */
@@ -74,7 +74,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
  {
 -    SDL_LockMutex(Android_ActivityMutex);
 +    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeSurfaceChanged()");
-+    SDL_LockMutex(Android_ActivityMutex);
++    //SDL_LockMutex(Android_ActivityMutex);
  
  #if SDL_VIDEO_OPENGL_EGL
      if (Android_Window)
@@ -83,7 +83,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
  #endif
  
 -    SDL_UnlockMutex(Android_ActivityMutex);
-+    SDL_UnlockMutex(Android_ActivityMutex);
++    //SDL_UnlockMutex(Android_ActivityMutex);
  }
  
  /* Called from surfaceDestroyed() */
@@ -94,7 +94,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
 -
 -    SDL_LockMutex(Android_ActivityMutex);
 +    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeSurfaceDestroyed()");
-+    SDL_LockMutex(Android_ActivityMutex);
++    //SDL_LockMutex(Android_ActivityMutex);
  
      if (Android_Window)
      {
@@ -103,7 +103,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
                  SDL_SetError("Try to release egl_surface with context probably still active");
              } else {
 -                SDL_UnlockMutex(Android_ActivityMutex);
-+                SDL_UnlockMutex(Android_ActivityMutex);
++                //SDL_UnlockMutex(Android_ActivityMutex);
                  SDL_Delay(10);
                  goto retry;
              }
@@ -112,7 +112,7 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
      }
  
 -    SDL_UnlockMutex(Android_ActivityMutex);
-+    SDL_UnlockMutex(Android_ActivityMutex);
++    //SDL_UnlockMutex(Android_ActivityMutex);
  }
  
  /* Keydown */
@@ -122,12 +122,12 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
  {
 -    SDL_LockMutex(Android_ActivityMutex);
 +    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeTouch()");
-+    //SDL_LockMutex(Android_ActivityMutex);
++    SDL_LockMutex(Android_ActivityMutex);
  
      Android_OnTouch(Android_Window, touch_device_id_in, pointer_finger_id_in, action, x, y, p);
  
 -    SDL_UnlockMutex(Android_ActivityMutex);
-+    //SDL_UnlockMutex(Android_ActivityMutex);
++    SDL_UnlockMutex(Android_ActivityMutex);
  }
  
  /* Mouse */
@@ -137,12 +137,12 @@ diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_andr
  {
 -    SDL_LockMutex(Android_ActivityMutex);
 +    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeMouse()");
-+    SDL_LockMutex(Android_ActivityMutex);
++    //SDL_LockMutex(Android_ActivityMutex);
  
      Android_OnMouse(Android_Window, button, action, x, y, relative);
  
 -    SDL_UnlockMutex(Android_ActivityMutex);
-+    SDL_UnlockMutex(Android_ActivityMutex);
++    //SDL_UnlockMutex(Android_ActivityMutex);
  }
  
  /* Accelerometer */
