@@ -1,0 +1,166 @@
+diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_android.c
+--- SDL.orig/src/core/android/SDL_android.c	2022-09-18 15:24:28.000000000 +0200
++++ SDL/src/core/android/SDL_android.c	2022-09-18 15:31:20.000000000 +0200
+@@ -851,32 +851,35 @@
+                                     jint surfaceWidth, jint surfaceHeight,
+                                     jint deviceWidth, jint deviceHeight, jfloat rate)
+ {
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "nativeSetScreenResolution()");
++    SDL_LockMutex(Android_ActivityMutex);
+ 
+     Android_SetScreenResolution(surfaceWidth, surfaceHeight, deviceWidth, deviceHeight, rate);
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    SDL_UnlockMutex(Android_ActivityMutex);
+ }
+ 
+ /* Resize */
+ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onNativeResize)(
+                                     JNIEnv *env, jclass jcls)
+ {
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeResize()");
++    SDL_LockMutex(Android_ActivityMutex);
+ 
+     if (Android_Window)
+     {
+         Android_SendResize(Android_Window);
+     }
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    SDL_UnlockMutex(Android_ActivityMutex);
+ }
+ 
+ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onNativeOrientationChanged)(
+                                     JNIEnv *env, jclass jcls,
+                                     jint orientation)
+ {
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeOrientationChanged()");
++    SDL_LockMutex(Android_ActivityMutex);
+ 
+     displayOrientation = (SDL_DisplayOrientation)orientation;
+ 
+@@ -886,7 +889,7 @@
+         SDL_SendDisplayEvent(display, SDL_DISPLAYEVENT_ORIENTATION, orientation);
+     }
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    SDL_UnlockMutex(Android_ActivityMutex);
+ }
+ 
+ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(nativeAddTouch)(
+@@ -988,7 +991,8 @@
+ /* Called from surfaceCreated() */
+ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onNativeSurfaceCreated)(JNIEnv *env, jclass jcls)
+ {
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeSurfaceCreated()");
++    SDL_LockMutex(Android_ActivityMutex);
+ 
+     if (Android_Window)
+     {
+@@ -1000,13 +1004,14 @@
+         }
+     }
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    SDL_UnlockMutex(Android_ActivityMutex);
+ }
+ 
+ /* Called from surfaceChanged() */
+ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onNativeSurfaceChanged)(JNIEnv *env, jclass jcls)
+ {
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeSurfaceChanged()");
++    SDL_LockMutex(Android_ActivityMutex);
+ 
+ #if SDL_VIDEO_OPENGL_EGL
+     if (Android_Window)
+@@ -1023,7 +1028,7 @@
+     }
+ #endif
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    SDL_UnlockMutex(Android_ActivityMutex);
+ }
+ 
+ /* Called from surfaceDestroyed() */
+@@ -1032,8 +1037,8 @@
+     int nb_attempt = 50;
+ 
+ retry:
+-
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeSurfaceDestroyed()");
++    SDL_LockMutex(Android_ActivityMutex);
+ 
+     if (Android_Window)
+     {
+@@ -1046,7 +1051,7 @@
+             if (nb_attempt == 0) {
+                 SDL_SetError("Try to release egl_surface with context probably still active");
+             } else {
+-                SDL_UnlockMutex(Android_ActivityMutex);
++                SDL_UnlockMutex(Android_ActivityMutex);
+                 SDL_Delay(10);
+                 goto retry;
+             }
+@@ -1067,7 +1072,7 @@
+         /* GL Context handling is done in the event loop because this function is run from the Java thread */
+     }
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    SDL_UnlockMutex(Android_ActivityMutex);
+ }
+ 
+ /* Keydown */
+@@ -1112,11 +1117,12 @@
+                                     jint touch_device_id_in, jint pointer_finger_id_in,
+                                     jint action, jfloat x, jfloat y, jfloat p)
+ {
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeTouch()");
++    //SDL_LockMutex(Android_ActivityMutex);
+ 
+     Android_OnTouch(Android_Window, touch_device_id_in, pointer_finger_id_in, action, x, y, p);
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    //SDL_UnlockMutex(Android_ActivityMutex);
+ }
+ 
+ /* Mouse */
+@@ -1124,11 +1130,12 @@
+                                     JNIEnv *env, jclass jcls,
+                                     jint button, jint action, jfloat x, jfloat y, jboolean relative)
+ {
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeMouse()");
++    SDL_LockMutex(Android_ActivityMutex);
+ 
+     Android_OnMouse(Android_Window, button, action, x, y, relative);
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    SDL_UnlockMutex(Android_ActivityMutex);
+ }
+ 
+ /* Accelerometer */
+@@ -1243,14 +1250,15 @@
+ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(nativeFocusChanged)(
+                                     JNIEnv *env, jclass cls, jboolean hasFocus)
+ {
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "nativeFocusChanged()");
++    SDL_LockMutex(Android_ActivityMutex);
+ 
+     if (Android_Window) {
+         __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "nativeFocusChanged()");
+         SDL_SendWindowEvent(Android_Window, (hasFocus ? SDL_WINDOWEVENT_FOCUS_GAINED : SDL_WINDOWEVENT_FOCUS_LOST), 0, 0);
+     }
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    SDL_UnlockMutex(Android_ActivityMutex);
+ }
+ 
+ JNIEXPORT void JNICALL SDL_JAVA_INTERFACE_INPUT_CONNECTION(nativeCommitText)(
