@@ -14,7 +14,7 @@ class LibSDL2Recipe(BootstrapNDKRecipe):
 
     depends = ['sdl2_image', 'sdl2_mixer', 'sdl2_ttf']
 
-    patches = ['mutex.patch']
+    patches = ['mutex3.patch']
 
     def get_recipe_env(self, arch=None, with_flags_in_cc=True, with_python=True):
         env = super().get_recipe_env(

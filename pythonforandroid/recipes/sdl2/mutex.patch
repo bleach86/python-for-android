@@ -1,166 +1,308 @@
 diff -Naur SDL.orig/src/core/android/SDL_android.c SDL/src/core/android/SDL_android.c
---- SDL.orig/src/core/android/SDL_android.c	2022-09-18 15:24:28.000000000 +0200
-+++ SDL/src/core/android/SDL_android.c	2022-09-18 15:31:20.000000000 +0200
-@@ -851,32 +851,35 @@
+--- SDL.orig/src/core/android/SDL_android.c	2022-08-13 05:48:10.000000000 +0200
++++ SDL/src/core/android/SDL_android.c	2022-09-25 15:20:13.000000000 +0200
+@@ -819,11 +819,13 @@
+ 
+ /* Lock / Unlock Mutex */
+ void Android_ActivityMutex_Lock() {
++    __android_log_print(2, "SDL", "Android_ActivityMutex_Lock()");
+     SDL_LockMutex(Android_ActivityMutex);
+ }
+ 
+ void Android_ActivityMutex_Unlock() {
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "Android_ActivityMutex_Unlock()");
+ }
+ 
+ /* Lock the Mutex when the Activity is in its 'Running' state */
+@@ -832,7 +834,7 @@
+     int resumeSignaled = 0;
+ 
+ retry:
+-
++    __android_log_print(2, "SDL", "Android_ActivityMutex_Lock_Running()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
+ 
+     pauseSignaled = SDL_SemValue(Android_PauseSem);
+@@ -840,6 +842,7 @@
+ 
+     if (pauseSignaled > resumeSignaled) {
+         SDL_UnlockMutex(Android_ActivityMutex);
++        __android_log_print(2, "SDL", "Android_ActivityMutex_Lock_Running()-Unlock");
+         SDL_Delay(50);
+         goto retry;
+     }
+@@ -851,17 +854,20 @@
                                      jint surfaceWidth, jint surfaceHeight,
                                      jint deviceWidth, jint deviceHeight, jfloat rate)
  {
--    SDL_LockMutex(Android_ActivityMutex);
-+    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "nativeSetScreenResolution()");
-+    //SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "nativeSetScreenResolution()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
  
      Android_SetScreenResolution(surfaceWidth, surfaceHeight, deviceWidth, deviceHeight, rate);
  
--    SDL_UnlockMutex(Android_ActivityMutex);
-+    //SDL_UnlockMutex(Android_ActivityMutex);
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "nativeSetScreenResolution()-Unlock");
  }
  
  /* Resize */
  JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onNativeResize)(
                                      JNIEnv *env, jclass jcls)
  {
--    SDL_LockMutex(Android_ActivityMutex);
-+    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeResize()");
-+    //SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeResize()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
  
      if (Android_Window)
-     {
-         Android_SendResize(Android_Window);
+@@ -870,12 +876,14 @@
      }
  
--    SDL_UnlockMutex(Android_ActivityMutex);
-+    //SDL_UnlockMutex(Android_ActivityMutex);
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeResize()-Unlock");
  }
  
  JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onNativeOrientationChanged)(
                                      JNIEnv *env, jclass jcls,
                                      jint orientation)
  {
--    SDL_LockMutex(Android_ActivityMutex);
-+    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeOrientationChanged()");
-+    //SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeOrientationChanged()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
  
      displayOrientation = (SDL_DisplayOrientation)orientation;
- 
-@@ -886,7 +889,7 @@
-         SDL_SendDisplayEvent(display, SDL_DISPLAYEVENT_ORIENTATION, orientation);
+@@ -887,6 +895,7 @@
      }
  
--    SDL_UnlockMutex(Android_ActivityMutex);
-+    //SDL_UnlockMutex(Android_ActivityMutex);
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeOrientationChanged()-Unlock");
  }
  
  JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(nativeAddTouch)(
-@@ -988,7 +991,8 @@
+@@ -988,6 +997,7 @@
  /* Called from surfaceCreated() */
  JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onNativeSurfaceCreated)(JNIEnv *env, jclass jcls)
  {
--    SDL_LockMutex(Android_ActivityMutex);
-+    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeSurfaceCreated()");
-+    //SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeSurfaceCreated()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
  
      if (Android_Window)
-     {
-@@ -1000,13 +1004,14 @@
-         }
+@@ -1001,11 +1011,13 @@
      }
  
--    SDL_UnlockMutex(Android_ActivityMutex);
-+    //SDL_UnlockMutex(Android_ActivityMutex);
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeSurfaceCreated()-Unlock");
  }
  
  /* Called from surfaceChanged() */
  JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(onNativeSurfaceChanged)(JNIEnv *env, jclass jcls)
  {
--    SDL_LockMutex(Android_ActivityMutex);
-+    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeSurfaceChanged()");
-+    //SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeSurfaceChanged()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
  
  #if SDL_VIDEO_OPENGL_EGL
-     if (Android_Window)
-@@ -1023,7 +1028,7 @@
-     }
+@@ -1024,6 +1036,7 @@
  #endif
  
--    SDL_UnlockMutex(Android_ActivityMutex);
-+    //SDL_UnlockMutex(Android_ActivityMutex);
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeSurfaceChanged()-Unlock");
  }
  
  /* Called from surfaceDestroyed() */
-@@ -1032,8 +1037,8 @@
+@@ -1032,7 +1045,7 @@
      int nb_attempt = 50;
  
  retry:
 -
--    SDL_LockMutex(Android_ActivityMutex);
-+    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeSurfaceDestroyed()");
-+    //SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeSurfaceDestroyed()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
  
      if (Android_Window)
-     {
-@@ -1046,7 +1051,7 @@
-             if (nb_attempt == 0) {
+@@ -1047,6 +1060,7 @@
                  SDL_SetError("Try to release egl_surface with context probably still active");
              } else {
--                SDL_UnlockMutex(Android_ActivityMutex);
-+                //SDL_UnlockMutex(Android_ActivityMutex);
+                 SDL_UnlockMutex(Android_ActivityMutex);
++                __android_log_print(2, "SDL", "onNativeSurfaceDestroyed()-Unlock");
                  SDL_Delay(10);
                  goto retry;
              }
-@@ -1067,7 +1072,7 @@
-         /* GL Context handling is done in the event loop because this function is run from the Java thread */
+@@ -1068,6 +1082,7 @@
      }
  
--    SDL_UnlockMutex(Android_ActivityMutex);
-+    //SDL_UnlockMutex(Android_ActivityMutex);
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeSurfaceDestroyed2()-Unlock");
  }
  
  /* Keydown */
-@@ -1112,11 +1117,12 @@
+@@ -1112,11 +1127,13 @@
                                      jint touch_device_id_in, jint pointer_finger_id_in,
                                      jint action, jfloat x, jfloat y, jfloat p)
  {
--    SDL_LockMutex(Android_ActivityMutex);
-+    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeTouch()");
-+    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeTouch()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
  
      Android_OnTouch(Android_Window, touch_device_id_in, pointer_finger_id_in, action, x, y, p);
  
--    SDL_UnlockMutex(Android_ActivityMutex);
-+    SDL_UnlockMutex(Android_ActivityMutex);
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeTouch()-Unlock");
  }
  
  /* Mouse */
-@@ -1124,11 +1130,12 @@
+@@ -1124,11 +1141,13 @@
                                      JNIEnv *env, jclass jcls,
                                      jint button, jint action, jfloat x, jfloat y, jboolean relative)
  {
--    SDL_LockMutex(Android_ActivityMutex);
-+    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "onNativeMouse()");
-+    //SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "onNativeMouse()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
  
      Android_OnMouse(Android_Window, button, action, x, y, relative);
  
--    SDL_UnlockMutex(Android_ActivityMutex);
-+    //SDL_UnlockMutex(Android_ActivityMutex);
+     SDL_UnlockMutex(Android_ActivityMutex);
++     __android_log_print(2, "SDL", "onNativeMouse()-Unlock");
  }
  
  /* Accelerometer */
-@@ -1243,14 +1250,15 @@
+@@ -1243,6 +1262,7 @@
  JNIEXPORT void JNICALL SDL_JAVA_INTERFACE(nativeFocusChanged)(
                                      JNIEnv *env, jclass cls, jboolean hasFocus)
  {
--    SDL_LockMutex(Android_ActivityMutex);
-+    __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "nativeFocusChanged()");
-+    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "nativeFocusChanged()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
  
      if (Android_Window) {
-         __android_log_print(ANDROID_LOG_VERBOSE, "SDL", "nativeFocusChanged()");
-         SDL_SendWindowEvent(Android_Window, (hasFocus ? SDL_WINDOWEVENT_FOCUS_GAINED : SDL_WINDOWEVENT_FOCUS_LOST), 0, 0);
+@@ -1251,6 +1271,7 @@
      }
  
--    SDL_UnlockMutex(Android_ActivityMutex);
-+    SDL_UnlockMutex(Android_ActivityMutex);
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "nativeFocusChanged()-Unlock");
  }
  
  JNIEXPORT void JNICALL SDL_JAVA_INTERFACE_INPUT_CONNECTION(nativeCommitText)(
+diff -Naur SDL.orig/src/video/android/SDL_androidevents.c SDL/src/video/android/SDL_androidevents.c
+--- SDL.orig/src/video/android/SDL_androidevents.c	2022-04-09 03:19:19.000000000 +0200
++++ SDL/src/video/android/SDL_androidevents.c	2022-09-25 15:20:57.000000000 +0200
+@@ -117,9 +117,11 @@
+ #if SDL_VIDEO_OPENGL_EGL
+         /* Make sure this is the last thing we do before pausing */
+         if (!isContextExternal) {
++            __android_log_print(2, "SDL", "Android_PumpEvents_Blocking()-Lock");
+             SDL_LockMutex(Android_ActivityMutex);
+             android_egl_context_backup(Android_Window);
+             SDL_UnlockMutex(Android_ActivityMutex);
++            __android_log_print(2, "SDL", "Android_PumpEvents_Blocking()-Unlock");
+         }
+ #endif
+ 
+@@ -143,9 +145,11 @@
+             /* Restore the GL Context from here, as this operation is thread dependent */
+ #if SDL_VIDEO_OPENGL_EGL
+             if (!isContextExternal && !SDL_HasEvent(SDL_QUIT)) {
++                __android_log_print(2, "SDL", "Android_PumpEvents_Blocking-2()-Lock");
+                 SDL_LockMutex(Android_ActivityMutex);
+                 android_egl_context_restore(Android_Window);
+                 SDL_UnlockMutex(Android_ActivityMutex);
++                __android_log_print(2, "SDL", "Android_PumpEvents_Blocking-2()-Unlock");
+             }
+ #endif
+ 
+@@ -195,9 +199,11 @@
+ 
+ #if SDL_VIDEO_OPENGL_EGL
+             if (!isContextExternal) {
++                __android_log_print(2, "SDL", "AndroidPumpEvents_NonBlocking()-Lock");
+                 SDL_LockMutex(Android_ActivityMutex);
+                 android_egl_context_backup(Android_Window);
+                 SDL_UnlockMutex(Android_ActivityMutex);
++                __android_log_print(2, "SDL", "AndroidPumpEvents_NonBlocking()-Unlock");
+             }
+ #endif
+ 
+@@ -229,9 +235,11 @@
+ #if SDL_VIDEO_OPENGL_EGL
+             /* Restore the GL Context from here, as this operation is thread dependent */
+             if (!isContextExternal && !SDL_HasEvent(SDL_QUIT)) {
++                __android_log_print(2, "SDL", "Android_PumpEvents_NonBlocking-2()-Lock");
+                 SDL_LockMutex(Android_ActivityMutex);
+                 android_egl_context_restore(Android_Window);
+                 SDL_UnlockMutex(Android_ActivityMutex);
++                __android_log_print(2, "SDL", "Android_PumpEvents_NonBlocking-2()-Unlock");
+             }
+ #endif
+ 
+diff -Naur SDL.orig/src/video/android/SDL_androidgl.c SDL/src/video/android/SDL_androidgl.c
+--- SDL.orig/src/video/android/SDL_androidgl.c	2022-04-09 03:19:19.000000000 +0200
++++ SDL/src/video/android/SDL_androidgl.c	2022-09-25 15:21:55.000000000 +0200
+@@ -56,6 +56,7 @@
+     ret = SDL_EGL_CreateContext(_this, ((SDL_WindowData *) window->driverdata)->egl_surface);
+ 
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "Android_GLES_CreateContext()-Unlock");
+ 
+     return ret;
+ }
+@@ -64,8 +65,8 @@
+ Android_GLES_SwapWindow(_THIS, SDL_Window * window)
+ {
+     int retval;
+-
+-    SDL_LockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "Android_GLES_SwapWindow()-Lock");
++    // SDL_LockMutex(Android_ActivityMutex);
+ 
+     /* The following two calls existed in the original Java code
+      * If you happen to have a device that's affected by their removal,
+@@ -74,9 +75,10 @@
+ 
+     /*_this->egl_data->eglWaitNative(EGL_CORE_NATIVE_ENGINE);
+     _this->egl_data->eglWaitGL();*/
+-    retval = SDL_EGL_SwapBuffers(_this, ((SDL_WindowData *) window->driverdata)->egl_surface);
++    retval = SDL_EGL_SwapBuffers(_this, ((SDL_WindowData *) window->driverdata)->egl_surface); //
+ 
+-    SDL_UnlockMutex(Android_ActivityMutex);
++    // SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "Android_GLES_SwapWindow()-Unlock");
+ 
+     return retval;
+ }
+diff -Naur SDL.orig/src/video/android/SDL_androidwindow.c SDL/src/video/android/SDL_androidwindow.c
+--- SDL.orig/src/video/android/SDL_androidwindow.c	2022-06-02 04:01:57.000000000 +0200
++++ SDL/src/video/android/SDL_androidwindow.c	2022-09-25 15:23:00.000000000 +0200
+@@ -100,6 +100,7 @@
+ endfunction:
+ 
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "Android_CreateWindow()-Unlock");
+ 
+     return retval;
+ }
+@@ -112,7 +113,8 @@
+ 
+ void
+ Android_SetWindowFullscreen(_THIS, SDL_Window *window, SDL_VideoDisplay *display, SDL_bool fullscreen)
+-{
++{   
++    __android_log_print(2, "SDL", "Android_SetWindowFullscreen()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
+ 
+     if (window == Android_Window) {
+@@ -160,6 +162,7 @@
+ endfunction:
+ 
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "Android_SetWindowFullscreen()-Unlock");
+ }
+ 
+ void
+@@ -177,6 +180,7 @@
+ void
+ Android_DestroyWindow(_THIS, SDL_Window *window)
+ {
++    __android_log_print(2, "SDL", "Android_DestroyWindow()-Lock");
+     SDL_LockMutex(Android_ActivityMutex);
+ 
+     if (window == Android_Window) {
+@@ -200,6 +204,7 @@
+     }
+ 
+     SDL_UnlockMutex(Android_ActivityMutex);
++    __android_log_print(2, "SDL", "Android_DestroyWindow()-Unlock");
+ }
+ 
+ SDL_bool
