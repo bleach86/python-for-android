@@ -105,6 +105,11 @@ android {
             }
         }
     }
+    
+        // Do not compress Qt binary resources file
+    aaptOptions {
+        noCompress 'rcc'
+    }
 
 }
 
