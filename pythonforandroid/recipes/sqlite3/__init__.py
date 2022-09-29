@@ -5,7 +5,7 @@ import sh
 
 
 class Sqlite3Recipe(NDKRecipe):
-    version = '3.35.5'
+    version = '3.34.1'
     # Don't forget to change the URL when changing the version
     url = 'https://www.sqlite.org/2021/sqlite-amalgamation-3350500.zip'
     generated_libraries = ['sqlite3']
