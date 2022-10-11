@@ -406,7 +406,7 @@ public class PythonActivity extends SDLActivity {
     }
     
     
-    public static void requestFocusForMainView() {
+    public void requestFocusForMainView() {
         runOnUiThread(new Runnable() {
             public void run() {
                 Log.v(TAG, "requestFocusForMainView is getting focus now.");
